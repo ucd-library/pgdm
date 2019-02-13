@@ -1,0 +1,33 @@
+{
+  "name": "@ucd-lib/pgdm",
+  "version": "0.0.1",
+  "description": "PostgreSQL Data Management Library",
+  "main": "index.js",
+  "bin": {
+    "pgdm": "./cmd/pgdm"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "camelcase": "^5.0.0",
+    "cli-color": "^1.4.0",
+    "cli-progress": "^2.1.1",
+    "clone": "^2.1.2",
+    "commander": "^2.19.0",
+    "csv-parse": "^4.3.0",
+    "csv-stringify": "^5.3.0",
+    "inquirer": "^6.2.2",
+    "multi-ini": "^2.0.0",
+    "pg": "^7.8.0",
+    "pg-cursor": "^2.0.0",
+    "pg-native": "^3.0.0",
+    "xlsx": "^0.14.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
