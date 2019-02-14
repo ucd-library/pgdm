@@ -50,6 +50,13 @@ ${deleteInfo}
       process.exit();
     }
 
+    if( info.updates.length === 0 &&
+        info.inserts.length === 0 && 
+        info.deletes.length === 0 ) {
+      console.log('No updates found');
+      process.exit();
+    }
+
     let answer = await inquirer.prompt([{
       type : 'confirm',
       name : 'proceed',
@@ -79,7 +86,7 @@ Are you sure you want to proceed?`
     
     console.log(`\n${total} rows updated in ${info.source.table_view} from source: ${info.source.name}`);
   } catch(e) {
-    console.error(e.message);
+    console.error('\n'+e.message);
   }
 
   process.exit();
