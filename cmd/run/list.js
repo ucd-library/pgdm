@@ -2,9 +2,9 @@ const program = require('commander');
 const wrapPgOptions = require('../utils/wrapPgOptions');
 const checkRequired = require('../utils/checkRequired');
 const getPgOptions = require('../utils/getPgOptions');
-const resolveFilePath = require('../utils/resolveFilePath');
+const {sprintf} = require('sprintf-js');
 const {model, pg, csv, source} = require('../..');
-const cliProgress = require('cli-progress');
+
 
 program
   .option('-s, --source [source]', 'Path to csv or excel file')
@@ -16,8 +16,6 @@ program
 
 checkRequired(program);
 
-let pbar;
-
 (async function() {
   try {
     let pgOptions = getPgOptions(program);
@@ -25,8 +23,24 @@ let pbar;
     await pg.connect(pgOptions);
     
     let list = await model.list(program.source, program.view);
-    console.log('source, view');
-    list.forEach(row => console.log(row.name+', '+row.table_view));
+    
+    let maxNameLength = 5;
+    let maxViewLength = 5;
+    list.forEach(row => {
+      if( row.name.length > maxNameLength ) maxNameLength = row.name.length;
+      if( row.table_view.length > maxViewLength ) maxViewLength = row.table_view.length;
+    });
+
+    let format = `%-${maxNameLength}s | %s`;
+    console.log(sprintf(format, 'source', 'view'));
+
+    let brk = '';    
+    for( let i = 0; i < maxNameLength; i++ ) brk += '-';
+    brk += '-+-';
+    for( let i = 0; i < maxViewLength; i++ ) brk += '-';
+    console.log(brk);
+
+    list.forEach(row => console.log(sprintf(format, row.name, row.table_view)));
     
   } catch(e) {
     console.log('');
