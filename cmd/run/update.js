@@ -28,8 +28,8 @@ checkRequired(program);
     await model.loadUids();
     
     let data = await csv.getData(filepath);
- 
-    let info = await model.analyzeUpdate(filename, null, data);
+
+    let info = await model.analyzeUpdate(filename, null, data.records, data.revision);
 
     if( program.dryRun ) {
       let updateInfo = clc.xterm(202)(await csv.stringify(info.updates.map(row => row.new)));
@@ -79,7 +79,7 @@ Are you sure you want to proceed?`
     
     console.log(`\n${total} rows updated in ${info.source.table_view} from source: ${info.source.name}`);
   } catch(e) {
-    console.error(e);
+    console.error(e.message);
   }
 
   process.exit();

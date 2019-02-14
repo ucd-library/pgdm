@@ -27,8 +27,8 @@ let pbar;
 
     await pg.connect(pgOptions);
     await model.loadUids();
-    
-    let data = await csv.getData(filepath);
+
+    let data = (await csv.getData(filepath)).records;
 
     pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
     

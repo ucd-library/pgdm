@@ -6,5 +6,5 @@ module.exports = cmd => {
     .option('-h, --pg-host [host]', 'PG host')
     .option('-d, --pg-database [database]', 'Name of PG database to use')
     .option('-P, --pg-port [port]', 'PG port to use')
-    .option('-l, --pg-ssl', 'Use SSL connection to PG')
+    .option('-l, --pg-sslmode', 'Set sslmode connection to PG.  \'disable\' or \'require\' supported')
 }
