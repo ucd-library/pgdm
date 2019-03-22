@@ -32,11 +32,11 @@ let pbar;
 
     pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
     
-    model.on('start', () => {
+    model.on('insert-start', () => {
       console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
       pbar.start(data.length, 0)
     });
-    model.on('insert', (e) => pbar.update(e.current));
+    model.on('insert-update', (e) => pbar.update(e.current));
     
     await model.insert(filename, program.sheet, program.table, data);
     
