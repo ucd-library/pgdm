@@ -18,6 +18,7 @@ program
 checkRequired(program);
 
 let pbar;
+let errors = [];
 
 (async function() {
   try {
@@ -38,14 +39,26 @@ let pbar;
     });
     model.on('insert-update', (e) => pbar.update(e.current));
     
-    await model.insert(filename, program.sheet, program.table, data);
+    errors = await model.insert(filename, program.sheet, program.table, data);
     
     pbar.stop();
     
   } catch(e) {
     console.log('');
     console.error(e.message);
+    if( e.info ) {
+      if( e.info.row ) console.log('  row: '+e.info.row);
+      if( e.info.uid ) console.log('  uid: '+e.info.uid);
+    }
   }
+
+  // errors.forEach(e => {
+  //   console.error(e.message);
+  //   if( e.info ) {
+  //     if( e.info.row ) console.log('  row: '+e.info.row);
+  //     if( e.info.uid ) console.log('  uid: '+e.info.uid);
+  //   }
+  // });
 
   process.exit();
 })()
