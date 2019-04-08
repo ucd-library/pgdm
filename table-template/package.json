@@ -1,0 +1,14 @@
+{
+  "name": "@ucd-lib/pgdm-table-template",
+  "version": "1.0.0",
+  "description": "Generate boiler plate SQL for PGDM tables",
+  "main": "index.js",
+  "bin": {
+    "pgdm-table-template": "./pgdm-table-template"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jrmerz@ucdavis.edu",
+  "license": "MIT"
+}
