@@ -2,19 +2,18 @@
 DROP TABLE IF EXISTS {{tableName}} CASCADE;
 CREATE TABLE {{tableName}} (
   {{tableName}}_id SERIAL PRIMARY KEY,
-  source_id INTEGER REFERENCES source NOT NULL
+  source_id INTEGER REFERENCES source NOT NULL,
 );
 
 -- VIEW
 CREATE OR REPLACE VIEW {{tableName}}_view AS
   SELECT
     {{tableLetter}}.{{tableName}}_id as {{tableName}}_id,
+
     sc.name as source_name
   FROM
-    {{tableName}} {{tableLetter}},
-    source sc
-  WHERE
-    {{tableLetter}}.source_id = sc.source_id;
+    {{tableName}} {{tableLetter}}
+LEFT JOIN source sc ON {{tableLetter}}.source_id = sc.source_id;
 
 -- FUNCTIONS
 CREATE OR REPLACE FUNCTION insert_{{tableName}} (
@@ -73,7 +72,7 @@ CREATE OR REPLACE FUNCTION update_{{tableName}}_from_trig()
 RETURNS TRIGGER AS $$   
 BEGIN
   PERFORM update_{{tableName}}(
-    {{tableName}}_id := NEW.{{tableName}}_id,
+    {{tableName}}_id_in := NEW.{{tableName}}_id,
   );
   RETURN NEW;
 
@@ -98,7 +97,7 @@ BEGIN
     RAISE EXCEPTION 'Unknown {{tableName}}: ', ;
   END IF;
   
-  RETURN hid;
+  RETURN {{tableLetter}}id;
 END ; 
 $$ LANGUAGE plpgsql;
 

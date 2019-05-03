@@ -1,5 +1,6 @@
 module.exports = cmd => {
   cmd
+    .option('-e, --pg-schema [schema]', 'Name of PG schema to use')  
     .option('-s, --pg-service [service]', 'Name of PG service from ~/.pg_service.conf file')
     .option('-u, --pg-user [user]', 'Name of PG User account')
     .option('-p, --pg-password [password]', 'PG user password')

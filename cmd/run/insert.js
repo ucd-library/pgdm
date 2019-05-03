@@ -21,34 +21,37 @@ let pbar;
 let errors = [];
 
 (async function() {
-  try {
-    let filepath = resolveFilePath(program.file);
-    let filename = model.checkAndGetFilename(filepath);
-    let pgOptions = getPgOptions(program);
+  let files = program.file.split(',');
 
-    await pg.connect(pgOptions);
-    await model.loadUids();
+  let pgOptions = getPgOptions(program);
+  await pg.connect(pgOptions);
 
-    let data = (await csv.getData(filepath)).records;
+  await model.loadUids();
 
-    pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
-    
-    model.on('insert-start', () => {
-      console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
-      pbar.start(data.length, 0)
-    });
-    model.on('insert-update', (e) => pbar.update(e.current));
-    
-    errors = await model.insert(filename, program.sheet, program.table, data);
-    
-    pbar.stop();
-    
-  } catch(e) {
-    console.log('');
-    console.error(e.message);
-    if( e.info ) {
-      if( e.info.row ) console.log('  row: '+e.info.row);
-      if( e.info.uid ) console.log('  uid: '+e.info.uid);
+  pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
+        
+  model.on('insert-start', e => {
+    pbar.start(e.total, 0)
+  });
+  model.on('insert-update', (e) => pbar.update(e.current));
+
+
+  for( let file of files ) {
+    if( !file ) continue;
+    try {
+        let filepath = resolveFilePath(file);
+        let filename = model.checkAndGetFilename(filepath);
+
+        let data = (await csv.getData(filepath)).records;
+
+        console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
+        
+        errors = await model.insert(filename, program.sheet, program.table, data);
+        
+        pbar.stop();
+    } catch(e) {
+      console.log('');
+      console.error(e.message);
     }
   }
 
@@ -59,6 +62,10 @@ let errors = [];
   //     if( e.info.uid ) console.log('  uid: '+e.info.uid);
   //   }
   // });
+
+  try {
+    await pg.client.end();
+  } catch(e) {}
 
   process.exit();
 })()
