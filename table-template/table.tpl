@@ -9,7 +9,7 @@ CREATE TABLE {{tableName}} (
 CREATE OR REPLACE VIEW {{tableName}}_view AS
   SELECT
     {{tableLetter}}.{{tableName}}_id as {{tableName}}_id,
-
+{{viewStarter}}
     sc.name as source_name
   FROM
     {{tableName}} {{tableLetter}}
@@ -17,7 +17,7 @@ LEFT JOIN source sc ON {{tableLetter}}.source_id = sc.source_id;
 
 -- FUNCTIONS
 CREATE OR REPLACE FUNCTION insert_{{tableName}} (
-
+{{viewInsertMethodSig}}
   source_name text) RETURNS void AS $$   
 DECLARE
   source_id INTEGER;
@@ -26,9 +26,9 @@ BEGIN
   select get_source_id(source_name) into source_id;
 
   INSERT INTO {{tableName}} (
-    source_id
+    {{viewInsertSql}}source_id
   ) VALUES (
-    source_id
+    {{viewInsertSql}}source_id
   );
 
 EXCEPTION WHEN raise_exception THEN
@@ -37,15 +37,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_{{tableName}} (
-  {{tableName}}_id_in INTEGER) RETURNS void AS $$   
+  {{tableName}}_id_in INTEGER,
+{{viewUpdateMethodSig}}) RETURNS void AS $$   
 DECLARE
 
 BEGIN
 
   UPDATE {{tableName}} SET (
-    
+    {{viewInsertSql}}
   ) = (
-    
+    test {{viewUpdateSql}}
   ) WHERE
     {{tableName}}_id = {{tableName}}_id_in;
 
@@ -59,6 +60,7 @@ CREATE OR REPLACE FUNCTION insert_{{tableName}}_from_trig()
 RETURNS TRIGGER AS $$   
 BEGIN
   PERFORM insert_{{tableName}}(
+{{trigInsertMethodSig}}
     source_name := NEW.source_name
   );
   RETURN NEW;
@@ -73,6 +75,7 @@ RETURNS TRIGGER AS $$
 BEGIN
   PERFORM update_{{tableName}}(
     {{tableName}}_id_in := NEW.{{tableName}}_id,
+{{trigUpdateMethodSig}}
   );
   RETURN NEW;
 
