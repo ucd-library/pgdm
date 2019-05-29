@@ -3,6 +3,7 @@ const wrapPgOptions = require('../utils/wrapPgOptions');
 const checkRequired = require('../utils/checkRequired');
 const getPgOptions = require('../utils/getPgOptions');
 const resolveFilePath = require('../utils/resolveFilePath');
+const printError = require('./print-error');
 const {model, pg, csv, source} = require('../..');
 
 program
@@ -28,7 +29,7 @@ checkRequired(program);
     console.log(`${result.rows.length} rows exported into ${filepath}.csv from table: ${result.source.table_view}`);
   } catch(e) {
     console.log('');
-    console.error(e.message);
+    printError(e);
   }
 
   process.exit();

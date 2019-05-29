@@ -3,6 +3,7 @@ const wrapPgOptions = require('../utils/wrapPgOptions');
 const checkRequired = require('../utils/checkRequired');
 const getPgOptions = require('../utils/getPgOptions');
 const {sprintf} = require('sprintf-js');
+const printError = require('./print-error');
 const {model, pg, csv, source} = require('../..');
 
 
@@ -44,7 +45,7 @@ checkRequired(program);
     
   } catch(e) {
     console.log('');
-    console.error(e.message);
+    printError(e);
   }
 
   process.exit();

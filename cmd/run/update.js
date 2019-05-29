@@ -5,6 +5,7 @@ const checkRequired = require('../utils/checkRequired');
 const getPgOptions = require('../utils/getPgOptions');
 const resolveFilePath = require('../utils/resolveFilePath');
 const {model, pg, csv, source} = require('../..');
+const printError = require('./print-error');
 const cliProgress = require('cli-progress');
 const clc = require("cli-color");
 
@@ -86,7 +87,8 @@ Are you sure you want to proceed?`
     
     console.log(`\n${total} rows updated in ${info.source.table_view} from source: ${info.source.name}`);
   } catch(e) {
-    console.error('\n'+e.message);
+    console.log('');
+    printError(e);
   }
 
   process.exit();

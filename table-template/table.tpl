@@ -46,7 +46,7 @@ BEGIN
   UPDATE {{tableName}} SET (
     {{viewInsertSql}}
   ) = (
-    test {{viewUpdateSql}}
+    {{viewUpdateSql}}
   ) WHERE
     {{tableName}}_id = {{tableName}}_id_in;
 
