@@ -1,12 +1,11 @@
 module.exports = e => {
-  if( !e.originalError ) e.originalError = {};
   return`
 ERROR:
 ${e.message}
 
 DETAILS:
-${e.originalError.detail || 'NA'}
+${e.detail || 'NA'}
 
 STACK TRACE:
-${e.originalError.where || 'NA'}
+${e.where || 'NA'}
 `};

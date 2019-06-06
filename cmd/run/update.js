@@ -77,11 +77,11 @@ Are you sure you want to proceed?`
     pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
     
     let total = 0;
-    model.on('start', (e) => {
+    model.on('update-start', (e) => {
       total = e.length;
       pbar.start(e.length, 0)
     });
-    model.on('update', (e) => pbar.update(e.current));
+    model.on('update-update', (e) => pbar.update(e.current));
     
     await model.update(info);
     

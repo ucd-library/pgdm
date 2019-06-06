@@ -8,8 +8,8 @@ const {model, pg, csv, source} = require('../..');
 
 
 program
-  .option('-s, --source [source]', 'Path to csv or excel file')
-  .option('-v, --view [view]', 'Required if excel file')
+  .option('-s, --source [source]', 'Path to csv file')
+  .option('-v, --view [view]', 'Limit by view name')
 wrapPgOptions(program);  
 
 program
