@@ -7,7 +7,8 @@ const printError = require('./print-error');
 const {model, pg, csv, source} = require('../..');
 
 program
-  .option('-c, --source <source name>', 'Name of source to export')
+  .option('-c, --source [source name]', 'Name of source to export')
+  .option('-a, --all [folder path]', 'Export all sheets to specified folder')
 wrapPgOptions(program);  
 
 program
@@ -22,11 +23,16 @@ checkRequired(program);
     await pg.connect(pgOptions);
     await model.loadUids();
 
-    let filepath = resolveFilePath(program.source);
 
-    let result = await model.exportCsv(program.source, filepath);
-    
-    console.log(`${result.rows.length} rows exported into ${filepath}.csv from table: ${result.source.table_view}`);
+    if( program.source ) {
+      let filepath = resolveFilePath(program.source);
+      let result = await model.exportCsv(program.source, filepath);
+      console.log(`${result.rows.length} rows exported into ${filepath}.csv from table: ${result.source.table_view}`);
+    } else if( program.all ) {
+      await model.exportAll(program.all);
+    }
+
+
   } catch(e) {
     console.log('');
     printError(e);
