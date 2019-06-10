@@ -8,8 +8,7 @@ const {model, pg, csv, source} = require('../..');
 const cliProgress = require('cli-progress');
 
 program
-  .option('-f, --file <file>', 'Path to csv or excel file')
-  // .option('-e, --sheet [sheetname]', 'Required if excel file')
+  .option('-f, --file <file>', 'Path to csv file')
   .option('-t, --table <table>', 'Table or view to insert into')
 wrapPgOptions(program);  
 
