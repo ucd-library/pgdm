@@ -23,7 +23,6 @@ checkRequired(program);
     await pg.connect(pgOptions);
     await model.loadUids();
 
-
     if( program.source ) {
       let filepath = resolveFilePath(program.source);
       let result = await model.exportCsv(program.source, filepath);
@@ -31,7 +30,6 @@ checkRequired(program);
     } else if( program.all ) {
       await model.exportAll(program.all);
     }
-
 
   } catch(e) {
     console.log('');

@@ -7,5 +7,5 @@ DETAILS:
 ${e.detail || 'NA'}
 
 STACK TRACE:
-${e.where || 'NA'}
+${e.where || e.stack || 'NA'}
 `};

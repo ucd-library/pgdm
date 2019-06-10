@@ -42,11 +42,12 @@ let errors = [];
         let filepath = resolveFilePath(file);
         let filename = model.checkAndGetFilename(filepath);
 
-        let data = (await csv.getData(filepath)).records;
+        let sheet = await csv.getData(filepath);
+        let data = sheet.records;
 
         console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
         
-        errors = await model.insert(filename, program.sheet, program.table, data);
+        errors = await model.insert(filename, program.sheet, program.table, data, {revision: sheet.revision});
         
         pbar.stop();
     } catch(e) {
