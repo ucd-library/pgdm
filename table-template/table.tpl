@@ -42,7 +42,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_{{tableName}} (
-  {{tableName}}_id_in INTEGER,
+  {{tableName}}_id_in UUID,
 {{viewUpdateMethodSig}}) RETURNS void AS $$   
 DECLARE
 
