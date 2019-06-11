@@ -1,34 +1,39 @@
 -- TABLE
 DROP TABLE IF EXISTS {{tableName}} CASCADE;
 CREATE TABLE {{tableName}} (
-  {{tableName}}_id SERIAL PRIMARY KEY,
-  source_id INTEGER REFERENCES source NOT NULL,
+  {{tableName}}_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  source_id UUID REFERENCES source NOT NULL,
 );
 
 -- VIEW
 CREATE OR REPLACE VIEW {{tableName}}_view AS
   SELECT
-    {{tableLetter}}.{{tableName}}_id as {{tableName}}_id,
+    {{tableLetter}}.{{tableName}}_id AS {{tableName}}_id,
 {{viewStarter}}
-    sc.name as source_name
+    sc.name AS source_name
   FROM
     {{tableName}} {{tableLetter}}
 LEFT JOIN source sc ON {{tableLetter}}.source_id = sc.source_id;
 
 -- FUNCTIONS
 CREATE OR REPLACE FUNCTION insert_{{tableName}} (
+  {{tableName}}_id UUID,
 {{viewInsertMethodSig}}
-  source_name text) RETURNS void AS $$   
+  source_name TEXT) RETURNS void AS $$   
 DECLARE
-  source_id INTEGER;
+  {{tableLetter}}id UUID;
+  source_id UUID;
 BEGIN
 
-  select get_source_id(source_name) into source_id;
+  IF( {{tableName}}_id IS NULL ) THEN
+    SELECT uuid_generate_v4() INTO {{tableName}}_id;
+  END IF;
+  SELECT get_source_id(source_name) INTO source_id;
 
   INSERT INTO {{tableName}} (
-    {{viewInsertSql}}source_id
+    {{tableName}}_id, {{viewInsertSql}}source_id
   ) VALUES (
-    {{viewInsertSql}}source_id
+    {{tableName}}_id, {{viewInsertSql}}source_id
   );
 
 EXCEPTION WHEN raise_exception THEN
@@ -60,6 +65,7 @@ CREATE OR REPLACE FUNCTION insert_{{tableName}}_from_trig()
 RETURNS TRIGGER AS $$   
 BEGIN
   PERFORM insert_{{tableName}}(
+    {{tableName}}_id := NEW.{{tableName}}_id,
 {{trigInsertMethodSig}}
     source_name := NEW.source_name
   );
@@ -85,18 +91,18 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- FUNCTION GETTER
-CREATE OR REPLACE FUNCTION get_{{tableName}}_id() RETURNS INTEGER AS $$   
+CREATE OR REPLACE FUNCTION get_{{tableName}}_id() RETURNS UUID AS $$   
 DECLARE
-  {{tableLetter}}id integer;
+  {{tableLetter}}id UUID;
 BEGIN
 
-  select 
-    {{tableName}}_id into {{tableLetter}}id 
-  from 
+  SELECT 
+    {{tableName}}_id INTO {{tableLetter}}id 
+  FROM 
     {{tableName}} {{tableLetter}} 
-  where  
+  WHERE  
 
-  if ({{tableLetter}}id is NULL) then
+  IF ({{tableLetter}}id IS NULL) THEN
     RAISE EXCEPTION 'Unknown {{tableName}}: ', ;
   END IF;
   
