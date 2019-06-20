@@ -36,16 +36,16 @@ The source table stores the names and unqiue id for all spreadsheets in the data
 ```sql
 -- TABLE
 CREATE TABLE source (
-  source_id SERIAL PRIMARY KEY,
+  source_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL UNIQUE,
   revision INTEGER NOT NULL,
   table_view text REFERENCES tables
 );
 
 -- FUNCTION GETTER
-CREATE OR REPLACE FUNCTION get_source_id(source_name text) RETURNS INTEGER AS $$   
+CREATE OR REPLACE FUNCTION get_source_id(source_name text) RETURNS INUUIDTEGER AS $$   
 DECLARE
-  sid integer;
+  sid UUID;
 BEGIN
   select source_id into sid from source where name = source_name;
 
@@ -60,14 +60,15 @@ $$ LANGUAGE plpgsql;
 
 # Wire Table For PGDM
 
-Here is an example of wiring up triggers to a view.
+Here is an example of wiring up triggers to a tables view in Postgres.  Here is an example crop table
+that just stores a crop name and is bound to a spreadsheet source.
 
 ```sql
 -- TABLE
 DROP TABLE IF EXISTS crop CASCADE;
 CREATE TABLE crop (
-  crop_id SERIAL PRIMARY KEY,
-  source_id INTEGER REFERENCES source NOT NULL,
+  crop_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  source_id UUID REFERENCES source NOT NULL,
   name TEXT UNIQUE NOT NULL
 );
 
@@ -85,18 +86,22 @@ CREATE OR REPLACE VIEW crop_view AS
 
 -- FUNCTIONS
 CREATE OR REPLACE FUNCTION insert_crop (
+  crop_id UUID,
   name text,
   source_name text) RETURNS void AS $$   
 DECLARE
-  source_id INTEGER;
+  source_id UUID;
 BEGIN
 
+  IF( crop_id IS NULL ) THEN
+    select uuid_generate_v4() into crop_id;
+  END IF;
   select get_source_id(source_name) into source_id;
 
   INSERT INTO crop (
-    source_id, name
+    crop_id, source_id, name
   ) VALUES (
-    source_id, name
+    crop_id, source_id, name
   );
 
 EXCEPTION WHEN raise_exception THEN
@@ -106,7 +111,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_crop (
   name_in TEXT,
-  crop_id_in INTEGER) RETURNS void AS $$   
+  crop_id_in UUID) RETURNS void AS $$   
 DECLARE
 
 BEGIN
@@ -151,9 +156,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- FUNCTION GETTER
-CREATE OR REPLACE FUNCTION get_crop_id(name_in text) RETURNS INTEGER AS $$   
+CREATE OR REPLACE FUNCTION get_crop_id(name_in text) RETURNS UUID AS $$   
 DECLARE
-  cid integer;
+  cid UUID;
 BEGIN
 
   select 
