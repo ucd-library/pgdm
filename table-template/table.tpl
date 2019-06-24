@@ -4,6 +4,7 @@ CREATE TABLE {{tableName}} (
   {{tableName}}_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   source_id UUID REFERENCES source NOT NULL,
 );
+CREATE INDEX {{tableName}}_source_id_idx ON {{tableName}}(source_id);
 
 -- VIEW
 CREATE OR REPLACE VIEW {{tableName}}_view AS

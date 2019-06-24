@@ -1,6 +1,6 @@
 {
   "name": "@ucd-lib/pgdm",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "description": "PostgreSQL Data Management Library",
   "main": "index.js",
   "bin": {
@@ -28,6 +28,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "jrmerz@ucdavis.edu",
   "license": "ISC"
 }
