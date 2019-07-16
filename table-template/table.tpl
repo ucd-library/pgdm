@@ -22,7 +22,6 @@ CREATE OR REPLACE FUNCTION insert_{{tableName}} (
 {{viewInsertMethodSig}}
   source_name TEXT) RETURNS void AS $$   
 DECLARE
-  {{tableLetter}}id UUID;
   source_id UUID;
 BEGIN
 
