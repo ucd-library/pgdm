@@ -27,7 +27,7 @@ CREATE TABLE tables (
 #### delete_view
 
 The delete_view is a boolean column which indicates if DELETE operations should happen against
-the table or the view.  The default is to delete against the table but some delete operations require additional work.  If this is the cause you should mark the column is TRUE.  If the column is TRUE you will need to wire up a DELETE trigger to the view as well as INSERT/UPDATE triggers.
+the table or the view.  The default is to delete against the table removing row with matching uid, but some delete operations require additional work.  If this is the cause you should mark the column is TRUE.  If the column is TRUE you will need to wire up a DELETE trigger to the view as well as INSERT/UPDATE triggers.
 
 ## Source
 
@@ -73,6 +73,8 @@ CREATE TABLE crop (
 );
 
 -- VIEW
+-- NOTE: source_name does not need to be included in the spreadsheet
+--       pgdm will automatically append this column
 CREATE OR REPLACE VIEW crop_view AS
   SELECT
     c.crop_id as crop_id,

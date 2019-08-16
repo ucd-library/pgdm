@@ -21,3 +21,7 @@ Help commands are descriped in CLI
 pgdm --help
 pgdm [command] --help
 ```
+
+# Documentation
+
+For building your own PGDM compatible database, [see documention here](./docs/index.md)
