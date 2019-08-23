@@ -41,7 +41,7 @@ To install run:
 
 ## Example Usage
 
-To create the [crop table from the schema documentation](./schema#wire-table-for-pgdm) run:
+To create the [crop table from the schema documentation](./schema.md#wire-table-for-pgdm) run:
 
 ```
 > pgdm-table-template crop name=text
@@ -139,7 +139,7 @@ BEGIN
     crop_id = crop_id_in;
 
   -- NOTE:
-  -- if you are only setting one column value, just like this example you
+  -- if you are only setting one column value, just like this example
   -- the above syntax won't work. You actually need to call:
   -- 
   -- UPDATE crop SET 
@@ -156,9 +156,8 @@ $$ LANGUAGE plpgsql;
 ### Function Triggers
 
 These *should* be pretty close to what you need from the start.  These
-functions map the NEW column to the insert/update function variable names.
-The trigger functions then return a TRIGGER that can be wired up in the
-trigger rule below.
+functions map the NEW column from the trigger to the insert/update function
+variable names. The trigger functions then return a TRIGGER that can be wired up in the trigger rule below.
 
 ```sql
 CREATE OR REPLACE FUNCTION insert_crop_from_trig() 
@@ -212,7 +211,7 @@ BEGIN
     name = name_in;
 
   -- Note the custom exception here!  These make debugging data issues
-  -- a low easier and are highly recommended.
+  -- a lot easier and are highly recommended.
   if (cid is NULL) then
     RAISE EXCEPTION 'Unknown crop: %', name_in;
   END IF;
