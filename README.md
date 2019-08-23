@@ -24,4 +24,4 @@ pgdm [command] --help
 
 # Documentation
 
-For building your own PGDM compatible database, [see documention here](./docs/index.md)
+For building your own PGDM compatible database, [see documention here](./docs/README.md)
