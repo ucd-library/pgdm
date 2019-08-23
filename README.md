@@ -1,6 +1,9 @@
 # pgdm
 PostgreSQL Data Management Tool
 
+This is the main JavaScript library and command line interface.  For a GUI
+version of PGDM please see: https://github.com/ucd-library/pgdm-ui
+
 # Install
 
 ## Requirements
