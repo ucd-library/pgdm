@@ -18,7 +18,6 @@ program
 checkRequired(program);
 
 let pbar;
-let errors = [];
 
 (async function() {
   let files = program.file.split(',');
@@ -47,7 +46,7 @@ let errors = [];
 
         console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
         
-        errors = await model.insert(filename, program.sheet, program.table, data, {revision: sheet.revision});
+        await model.insert(filename, program.sheet, program.table, data, {revision: sheet.revision});
         
         pbar.stop();
     } catch(e) {

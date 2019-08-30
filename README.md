@@ -6,6 +6,8 @@ version of PGDM please see: https://github.com/ucd-library/pgdm-ui
 
 # Install
 
+Install the pgdm command line interface.
+
 ## Requirements
 
  - [NodeJS](https://nodejs.org/en/)
