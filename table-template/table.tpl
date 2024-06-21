@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS {{tableName}} CASCADE;
 CREATE TABLE {{tableName}} (
   {{tableName}}_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  source_id UUID REFERENCES source NOT NULL,
+  source_id UUID REFERENCES pgdm_source NOT NULL,
 );
 CREATE INDEX {{tableName}}_source_id_idx ON {{tableName}}(source_id);
 
@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW {{tableName}}_view AS
     sc.name AS source_name
   FROM
     {{tableName}} {{tableLetter}}
-LEFT JOIN source sc ON {{tableLetter}}.source_id = sc.source_id;
+LEFT JOIN pgdm_source sc ON {{tableLetter}}.source_id = sc.source_id;
 
 -- FUNCTIONS
 CREATE OR REPLACE FUNCTION insert_{{tableName}} (

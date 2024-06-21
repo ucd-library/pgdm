@@ -1,6 +1,6 @@
 {
   "name": "@ucd-lib/pgdm",
-  "version": "0.0.18",
+  "version": "1.0.0",
   "description": "PostgreSQL Data Management Library",
   "main": "index.js",
   "bin": {
