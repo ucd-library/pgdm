@@ -8,4 +8,6 @@ module.exports = cmd => {
     .option('-d, --pg-database [database]', 'Name of PG database to use')
     .option('-P, --pg-port [port]', 'PG port to use')
     .option('-l, --pg-sslmode', 'Set sslmode connection to PG.  \'disable\' or \'require\' supported')
+    .option('--pgdm-source-table [table]', 'Name of table to store source file information')
+    .option('--pgdm-list-table [table]', 'Name of table to store list of tables available to pgdm')
 }

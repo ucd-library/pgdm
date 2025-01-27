@@ -20,44 +20,47 @@ checkRequired(program);
 let pbar;
 
 (async function() {
-  let files = program.file.split(',');
-
-  let pgOptions = getPgOptions(program);
-  await pg.connect(pgOptions);
-
-  await model.loadUids();
-
-  pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
-        
-  model.on('insert-start', e => {
-    pbar.start(e.total, 0)
-  });
-  model.on('insert-update', (e) => pbar.update(e.current));
-
-
-  for( let file of files ) {
-    if( !file ) continue;
-    try {
-        let filepath = resolveFilePath(file);
-        let filename = model.checkAndGetFilename(filepath);
-
-        let sheet = await csv.getData(filepath);
-        let data = sheet.records;
-
-        console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
-        
-        await model.insert(filename, program.sheet, program.table, data, {revision: sheet.revision});
-        
-        pbar.stop();
-    } catch(e) {
-      console.log('');
-      printError(e);
-    }
-  }
-
   try {
+    let files = program.file.split(',');
+    let pgOptions = getPgOptions(program);
+
+    await pg.connect(pgOptions);
+    await model.loadUids();
+
+    pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
+          
+    model.on('insert-start', e => {
+      pbar.start(e.total, 0)
+    });
+    model.on('insert-update', (e) => pbar.update(e.current));
+
+
+    for( let file of files ) {
+      if( !file ) continue;
+      try {
+          let filepath = resolveFilePath(file);
+          let filename = model.checkAndGetFilename(filepath);
+
+          let sheet = await csv.getData(filepath);
+          let data = sheet.records;
+
+          console.log(`\nInserting ${data.length} rows into ${program.table} from source: ${source.getSourceName(filename, program.sheet)}`);
+          
+          await model.insert(filename, program.sheet, program.table, data, {revision: sheet.revision});
+          
+          pbar.stop();
+      } catch(e) {
+        console.log('');
+        printError(e);
+      }
+    }
+
+
     await pg.client.end();
-  } catch(e) {}
+  } catch(e) {
+    console.log('');
+    printError(e);
+  }
 
   process.exit();
 })()
