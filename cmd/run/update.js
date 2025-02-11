@@ -26,7 +26,7 @@ checkRequired(program);
     let pgOptions = getPgOptions(program);
 
     await pg.connect(pgOptions);
-    await model.loadUids();
+    await model.loadConfig();
     
     let data = await csv.getData(filepath);
 

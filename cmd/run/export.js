@@ -21,7 +21,7 @@ checkRequired(program);
     let pgOptions = getPgOptions(program);
 
     await pg.connect(pgOptions);
-    await model.loadUids();
+    await model.loadConfig();
 
     if( program.source ) {
       let filepath = resolveFilePath(program.source);

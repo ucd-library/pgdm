@@ -25,7 +25,7 @@ let pbar;
     let pgOptions = getPgOptions(program);
 
     await pg.connect(pgOptions);
-    await model.loadUids();
+    await model.loadConfig();
 
     pbar = new cliProgress.Bar({etaBuffer: 50}, cliProgress.Presets.shades_classic); 
           

@@ -21,7 +21,7 @@ checkRequired(program);
     let pgOptions = getPgOptions(program);
 
     await pg.connect(pgOptions);
-    await model.loadUids();
+    await model.loadConfig();
 
     let info = await model.analyzeDelete(program.source);
 

@@ -28,7 +28,7 @@ let pbar;
     }
 
     await pg.connect(pgOptions);
-    await model.loadUids();
+    await model.loadConfig();
 
     let total = 0;
     model.on('insert-start', e => {
